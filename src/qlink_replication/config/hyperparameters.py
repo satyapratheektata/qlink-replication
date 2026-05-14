@@ -1,0 +1,7 @@
+"""Configuration hyperparameters for empirical optimization runs."""
+
+DEFAULT_LEARNING_RATE = 0.1
+DEFAULT_MAX_ITERS = 1500
+DEFAULT_CONVERGENCE_THRESHOLD = 1e-3
+DEFAULT_NUM_SEEDS = 5
+DEFAULT_RANDOM_SEED = 42
