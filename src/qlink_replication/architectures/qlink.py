@@ -44,7 +44,9 @@ def build_qlink_circuit(n_data: int, depth: int, is_adaptive: bool = False) -> q
         if is_adaptive:
             circuit.add_parametric_RZ_gate(q(control_idx), 0.0)
         else:
-            circuit.add_RZ_gate(q(control_idx), math.pi/4)
+            # Qulacs RZ uses exp(+i*angle/2*Z) while TC's rz/rxx uses exp(-i*theta/2);
+            # negate the fixed angle so the resulting Rxx matches TC's Rxx(pi/4).
+            circuit.add_RZ_gate(q(control_idx), -math.pi/4)
         circuit.add_CNOT_gate(q(i), q(control_idx))
         for target in (q(i), q(control_idx)): circuit.add_H_gate(target)
             
@@ -67,7 +69,9 @@ def build_qlink_circuit(n_data: int, depth: int, is_adaptive: bool = False) -> q
                 if is_adaptive:
                     circuit.add_parametric_RZ_gate(q(control_idx), 0.0)
                 else:
-                    circuit.add_RZ_gate(q(control_idx), math.pi/4)
+                    # Qulacs RZ uses exp(+i*angle/2*Z) while TC's rz/rxx uses exp(-i*theta/2);
+                    # negate the fixed angle so the resulting Rxx matches TC's Rxx(pi/4).
+                    circuit.add_RZ_gate(q(control_idx), -math.pi/4)
                 circuit.add_CNOT_gate(q(i), q(control_idx))
                 for target in (q(i), q(control_idx)): circuit.add_H_gate(target)
                 

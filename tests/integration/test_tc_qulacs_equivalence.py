@@ -101,16 +101,17 @@ def test_tc_qulacs_state_equivalence(n_data, depth, model):
         if model == "Q-LINK(Adaptive)" and j != depth - 1:
             flat.extend(res_params[j + 1, i] for i in range(n_data))   # inter-layer collection
     assert len(flat) == circuit.get_parameter_count()
+    # Qulacs uses exp(+i*angle/2) while TC uses exp(-i*theta/2); negate at the boundary.
     for k, v in enumerate(flat):
-        circuit.set_parameter(k, float(v))
+        circuit.set_parameter(k, -float(v))
 
     qulacs_state = _qulacs_state(circuit, n_tot, tc_input)
 
-    # The two backends use opposite physical conventions but the same logical mapping
-    # via q(tc_idx) = n_tot - 1 - tc_idx. After loading the same input vector and
-    # mirroring the gate order, the output vectors are equal up to that index reversal.
-    qulacs_state_in_tc_order = qulacs_state.reshape([2] * n_tot).transpose().flatten()
-    assert np.allclose(tc_state, qulacs_state_in_tc_order, atol=1e-10), (
-        f"max abs diff = {np.max(np.abs(tc_state - qulacs_state_in_tc_order)):.2e} "
+    # With q(i) = n_tot - 1 - i (architecture mapping) and TC big-endian indexing,
+    # the substitution Q_j = T_{n-1-j} gives idx_q == idx_TC; no reshape/transpose
+    # is needed when comparing state vectors. TC uses complex64 internally, so we
+    # relax the tolerance to single-precision.
+    assert np.allclose(tc_state, qulacs_state, atol=1e-5), (
+        f"max abs diff = {np.max(np.abs(tc_state - qulacs_state)):.2e} "
         f"for n_data={n_data}, depth={depth}, model={model}"
     )

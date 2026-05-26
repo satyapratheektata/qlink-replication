@@ -27,26 +27,29 @@ def run_sgd_trajectory(
     """
     rng = np.random.default_rng(seed)
     num_params = circuit.get_parameter_count()
+    # Parameters are in TC convention (theta_TC). Qulacs gates use exp(+i*angle/2)
+    # rotations while TC uses exp(-i*theta/2), so we negate when writing the qulacs
+    # parameter and negate qulacs' returned gradient to recover dL/dtheta_TC.
     params = rng.standard_normal(num_params) * 0.1
 
     grads_traj = []
 
     for it in range(max_iters):
         for p_idx in range(num_params):
-            circuit.set_parameter(p_idx, params[p_idx])
+            circuit.set_parameter(p_idx, -params[p_idx])
 
         state = qulacs.QuantumState(circuit.get_qubit_count())
         state.load(psi_init)
         circuit.update_quantum_state(state)
 
         loss = obs.get_expectation_value(state).real
-        grad = np.array(circuit.backprop(obs))
+        grad_tc = -np.array(circuit.backprop(obs))   # dL/dtheta_TC = -dL/dtheta_qulacs
         if record_indices is not None:
-            grads_traj.append(grad[list(record_indices)].copy())
+            grads_traj.append(grad_tc[list(record_indices)].copy())
         else:
-            grads_traj.append(grad.copy())
+            grads_traj.append(grad_tc.copy())
 
-        params -= lr * grad
+        params -= lr * grad_tc
         if loss < tol:
             break
 
