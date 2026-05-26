@@ -2,6 +2,13 @@
 
 import qulacs
 
+
+def u_rotation_indices(n_data: int, depth: int) -> list[int]:
+    """All parameters in a Vanilla circuit are U-rotation gates, so this returns the
+    full index range. Provided for API symmetry with :mod:`.qlink`."""
+    return list(range(3 * n_data * depth))
+
+
 def build_vanilla_circuit(n_data: int, depth: int) -> qulacs.ParametricQuantumCircuit:
     """Builds the Vanilla quantum architecture without messenger residual connections."""
     n_tot = n_data

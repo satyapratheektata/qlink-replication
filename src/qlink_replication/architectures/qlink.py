@@ -3,7 +3,32 @@
 import math
 import qulacs
 
-def build_qlink_circuit(n_data: int, depth: int) -> qulacs.ParametricQuantumCircuit:
+
+def u_rotation_indices(n_data: int, depth: int, is_adaptive: bool) -> list[int]:
+    """Return the parameter indices that correspond to U-rotation gates (Rz/Ry/Rx on
+    data qubits), in the order they are added by :func:`build_qlink_circuit`.
+
+    The authors' ``scripts/main.py`` only records ``u_params.grad`` for gradient-variance
+    computation; this helper exposes the same subset of qulacs' flat parameter vector.
+
+    For Fixed, this is simply [0, ..., 3*n_data*depth - 1] since no Rxx params exist.
+    For Adaptive, the initial collection block contributes ``n_data`` Rxx params
+    before the first U-rotation layer, and each subsequent collection block contributes
+    another ``n_data`` between layers.
+    """
+    indices: list[int] = []
+    cursor = 0
+    if is_adaptive:
+        cursor += n_data  # initial collection block (Rxx residuals)
+    for j in range(depth):
+        indices.extend(range(cursor, cursor + 3 * n_data))
+        cursor += 3 * n_data
+        if is_adaptive and j != depth - 1:
+            cursor += n_data  # inter-layer collection block (Rxx residuals)
+    return indices
+
+
+def build_qlink_circuit(n_data: int, depth: int, is_adaptive: bool = False) -> qulacs.ParametricQuantumCircuit:
     """Builds the Q-LINK quantum architecture with messenger residual connections."""
     n_tot = n_data + 1
     circuit = qulacs.ParametricQuantumCircuit(n_tot)
@@ -16,7 +41,10 @@ def build_qlink_circuit(n_data: int, depth: int) -> qulacs.ParametricQuantumCirc
     for i in range(n_data):
         for target in (q(i), q(control_idx)): circuit.add_H_gate(target)
         circuit.add_CNOT_gate(q(i), q(control_idx))
-        circuit.add_RZ_gate(q(control_idx), math.pi/4)
+        if is_adaptive:
+            circuit.add_parametric_RZ_gate(q(control_idx), 0.0)
+        else:
+            circuit.add_RZ_gate(q(control_idx), math.pi/4)
         circuit.add_CNOT_gate(q(i), q(control_idx))
         for target in (q(i), q(control_idx)): circuit.add_H_gate(target)
             
@@ -36,7 +64,10 @@ def build_qlink_circuit(n_data: int, depth: int) -> qulacs.ParametricQuantumCirc
             for i in range(n_data):
                 for target in (q(i), q(control_idx)): circuit.add_H_gate(target)
                 circuit.add_CNOT_gate(q(i), q(control_idx))
-                circuit.add_RZ_gate(q(control_idx), math.pi/4)
+                if is_adaptive:
+                    circuit.add_parametric_RZ_gate(q(control_idx), 0.0)
+                else:
+                    circuit.add_RZ_gate(q(control_idx), math.pi/4)
                 circuit.add_CNOT_gate(q(i), q(control_idx))
                 for target in (q(i), q(control_idx)): circuit.add_H_gate(target)
                 
