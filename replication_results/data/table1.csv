@@ -1,0 +1,19 @@
+Qubits,Model,Expressibility (KL),Gradient Variance
+5,Q-LINK(Fixed),4.4916e-03,5.6987e-06
+5,Q-LINK(Adaptive),9.7468e-03,1.9784e-06
+5,Vanilla,5.6185e-03,5.0975e-07
+6,Q-LINK(Fixed),2.5628e-03,1.8633e-06
+6,Q-LINK(Adaptive),1.3117e-03,2.3723e-05
+6,Vanilla,1.9646e-03,6.3876e-07
+7,Q-LINK(Fixed),1.4607e-03,1.0115e-06
+7,Q-LINK(Adaptive),1.4833e-03,1.9967e-05
+7,Vanilla,2.5711e-04,4.2940e-07
+8,Q-LINK(Fixed),2.0870e-06,5.1441e-07
+8,Q-LINK(Adaptive),2.0870e-06,3.2018e-05
+8,Vanilla,1.4833e-03,2.6779e-07
+9,Q-LINK(Fixed),4.1377e-12,3.1923e-07
+9,Q-LINK(Adaptive),4.1377e-12,4.1847e-05
+9,Vanilla,2.0870e-06,1.8178e-07
+10,Q-LINK(Fixed),0.0000e+00,2.1262e-07
+10,Q-LINK(Adaptive),0.0000e+00,4.3593e-05
+10,Vanilla,4.1377e-12,1.3069e-07
