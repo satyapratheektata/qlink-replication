@@ -30,8 +30,14 @@ import argparse
 import csv
 import json
 import random
+import sys
 import time
 from pathlib import Path
+
+# Make ``src`` importable when the script is run directly (not via ``uv run``).
+_PKG_SRC = Path(__file__).resolve().parent.parent / "src"
+if _PKG_SRC.is_dir() and str(_PKG_SRC) not in sys.path:
+    sys.path.insert(0, str(_PKG_SRC))
 
 import matplotlib
 
