@@ -9,7 +9,7 @@ def generate_random_product_state(n_data: int, n_tot: int, model: str, rng: np.r
     psi_data = rng.standard_normal(2**n_data) + 1j * rng.standard_normal(2**n_data)
     psi_data /= np.linalg.norm(psi_data)
     
-    if model == "Q-LINK(Fixed)":
+    if model.startswith("Q-LINK"):
         psi_init = np.kron(psi_data, np.array([1.0, 0.0], dtype=np.complex128))
         # Tensor permutation to place the messenger qubit at the expected index
         psi_init = psi_init.reshape([2] * n_tot).transpose().flatten()

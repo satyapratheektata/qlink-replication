@@ -1,6 +1,5 @@
 """Geometric scaling and circuit depth formulas."""
 
-import math
 import numpy as np
 
 def yb_depth(n_data: int) -> int:
