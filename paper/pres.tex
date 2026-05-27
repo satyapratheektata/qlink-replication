@@ -1,6 +1,8 @@
 \documentclass[10pt, aspectratio=169]{beamer}
 \usetheme{Madrid}
 \usecolortheme{default}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{navigation symbols}{}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{booktabs}
 \usepackage{graphicx}
@@ -144,27 +146,28 @@
 
 % 7
 \begin{frame}{6. Extensions E1–E5, with E5 verified empirically}
-    \scriptsize
-    \textbf{Theoretical menu (Week 2 hypotheses).}
-    \begin{itemize}\itemsep 0.1em
-        \item \textbf{E1.} Multi-messenger ($k\!>\!1$) — \textcolor{miss}{pruned}: $\mathcal{O}(2^{-k})$ Haar-volume penalty dominates the linear trace gain.
-        \item \textbf{E2.} Interaction basis — \textcolor{flag}{constraint}: $R_{yy}$ basis-equivalent; $R_{zz}$ commutes with distribution-CNOT axis, fractures DLA into a direct sum.
-        \item \textbf{E3.} Mechanism ablation — \textcolor{miss}{topologically irreducible (theory)} / \textcolor{flag}{empirically refuted (data)}: collection alone reproduces most of the gain.
-        \item \textbf{E4.} Periodic messenger — \textcolor{flag}{functional}: continuous DLA invariant under $p$-periodicity, throttles operator spreading.
-        \item \textbf{E5.} \textbf{Combinatorial cost $\mathcal{O}_m = \tfrac{1}{2}I - \tfrac{1}{2\binom{n}{m}}\sum_{|S|=m}\!\bigotimes_{i\in S} Z_i$} — \textcolor{pass}{\textbf{breakthrough}}: same Pauli-orthogonality argument gives
-        \[
-            \boxed{\;\mathcal{R}_m(n) = \frac{n+1}{n+1-m}\;}
-        \]
-        $m=1$ recovers $(n+1)/n$; $m \ge 2$ \emph{strengthens} the structural ratio.
-    \end{itemize}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}\centering
-            \includegraphics[width=0.85\textwidth]{figure/e5/e5_variance_ratio.pdf}\\
-            \tiny Empirical $\mathcal{R}_m(n)$ across $n\!\in\!\{3,\dots,8\}$, $m\!\in\!\{1,\dots,5\}$ (Protocol C)
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}\scriptsize
+            \textbf{Week-2 hypotheses (signed off).}
+            \begin{itemize}\itemsep 0.05em
+                \item \textbf{E1.} Multi-messenger ($k\!>\!1$): \textcolor{miss}{pruned} — $\mathcal{O}(2^{-k})$ Haar penalty dominates.
+                \item \textbf{E2.} Interaction basis: \textcolor{flag}{partial} — $R_{yy}\!\equiv\!R_{xx}$; $R_{zz}$ keeps $\sim 50$–$70\%$.
+                \item \textbf{E3.} Mechanism ablation: \textcolor{flag}{refuted} — coll-only $\approx$ full Q-LINK.
+                \item \textbf{E4.} Periodic messenger: \textcolor{flag}{functional} — DLA invariant under $p$-period.
+                \item \textbf{E5.} $m$-local cost: \textcolor{pass}{breakthrough} — derivation $\to$
+            \end{itemize}
+            \vspace{0.2em}
+            $\mathcal{O}_m = \tfrac{1}{2}I - \tfrac{1}{2\binom{n}{m}}\sum_{|S|=m}\!\bigotimes_{i\in S} Z_i$.
+            Pauli-orthogonality (slide 4) gives $\mathrm{Tr}(V_m^2) = N/\binom{n}{m}$ (Vanilla), $2N/\binom{n}{m}$ (Q-LINK). Ratio:
+            \[
+                \boxed{\;\mathcal{R}_m(n) = \frac{\binom{n+1}{m}}{\binom{n}{m}} = \frac{n+1}{n+1-m}\;}
+            \]
+            $m\!=\!1$ recovers $(n+1)/n$; $m \ge 2$ \emph{strengthens} the ratio.
+            Per-extension write-ups: \texttt{paper/extensions/\{e1..e13\}.pdf}.
         \end{column}
-        \begin{column}{0.5\textwidth}\centering
-            \includegraphics[width=0.85\textwidth]{figure/e5/e5_m2_landscape.pdf}\\
-            \tiny $m\!=\!2$ landscape: Vanilla (ravines) vs Q-LINK (smoothed)
+        \begin{column}{0.45\textwidth}\centering
+            \includegraphics[width=\textwidth]{figure/e5/e5_variance_ratio.pdf}\\
+            \tiny Empirical $\mathcal{R}_m(n)$, $n \in \{3,\dots,8\}$, $m \in \{1,\dots,5\}$
         \end{column}
     \end{columns}
 \end{frame}
